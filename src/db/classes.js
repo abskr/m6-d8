@@ -1,13 +1,14 @@
-module.exports = (sequelize, Datatypes) => {
-  const Module = sequalize.define('module', {
+module.exports = (sequelize, DataTypes) => {
+  const Class = sequelize.define("classes", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     topic: {
       type: DataTypes.TEXT,
-      allowNull: false
-    }
-  })
-}
+      allowNull: false,
+    },
+  });
+  return Class;
+};

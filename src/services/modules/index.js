@@ -1,47 +1,51 @@
 const express = require("express");
-const Module = require('../../db').Module
-const Class = require('../../db').Class
-// Operator = 'op'
-// docs = https://sequelize.org/master/manual/model-querying-basics.html#operators
-const {Op} = require('sequalize')
+const Module = require("../../db").Module;
+const Class = require("../../db").Class;
+const Student = require("../../db").Student;
+const { Op, Sequelize } = require("sequelize");
 const router = express.Router();
-
-// DOCS: Model Querying - https://sequelize.org/master/manual/model-querying-basics.html
-// This route is 'chained'
-
 
 router
   .route("/")
-  // Simple SELECT queries
   .get(async (req, res, next) => {
     try {
-      // 'include' to populate
-      // 'model' to project which model
-      // this needs some fix...
       const data = await Module.findAll({
-        where: {name: {[Op.iLike]: "%" + req.query.name + "%"}},
+        where: {
+          [Op.or]: [
+            { name: { [Op.iLike]: "%" + req.query.name + "%" } },
+            {
+              classes: Sequelize.where(Sequelize.col(`"classes".topic`), {
+                [Op.iLike]: "%" + req.query.className + "%",
+              }),
+              // {
+              //   where: {
+              //     "classes.topic": {
+              //       [Op.iLike]: "%" + req.query.className + "%",
+              //     },
+              //   },
+              // },
+            },
+          ],
+        },
         include: {
           model: Class,
-          where: {
-            name: {[Op.iLike]: "%" + req.query.name + "%"}
-          },
-          include: {
-            model: Student,
-            through: {
-              attributes: []
-            }
-          }
-        }
-      })
+          // where: {
+          //   [Op.or]: [
+          //     { topic: { [Op.iLike]: "%" + req.query.className + "%" } },
+          //   ],
+          // },
+          include: { model: Student, through: { attributes: [] } },
+        },
+      });
+      res.send(data);
     } catch (e) {
       console.log(e);
     }
   })
-  // Simple INSERT queries
   .post(async (req, res, next) => {
     try {
-      const data = await Module.create(req.body)
-      res.send(data)
+      const data = await Module.create(req.body);
+      res.send(data);
     } catch (e) {
       console.log(e);
     }
@@ -51,36 +55,32 @@ router
   .route("/:id")
   .get(async (req, res, next) => {
     try {
-      const data = await Module.findByPk(req.params.if)
+      const data = await Module.findByPk(req.params.id);
+      res.send(data);
     } catch (e) {
       console.log(e);
     }
   })
-
-  // Simple UPDATE queries
   .put(async (req, res, next) => {
     try {
       const data = await Module.update(req.body, {
-        where: {id : req.params.id},
-        // so it doenst only return the number of the row
-        returning: true, // returning the updated data
-        plain: true // prevent returning the number of the row (plain: {default: true})
-      })
+        where: { id: req.params.id },
+        returning: true,
+      });
+      console.log(data);
       res.send(data[1][0]);
-      // since 'data' returning an array in default, target only the object inside it
     } catch (e) {
       console.log(e);
     }
   })
-
-  // simple DESTROY
   .delete(async (req, res, next) => {
     try {
-      const data = await Module.destroy({where: {id: req.params.id}})
-      if (data>0){
-        res.send(data);
+      const data = await Module.destroy({ where: { id: req.params.id } });
+      console.log(data);
+      if (data > 0) {
+        res.send("ok");
       } else {
-        res.status(404).send('not found')
+        res.status(404).send("not found");
       }
     } catch (e) {
       console.log(e);

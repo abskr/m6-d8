@@ -1,5 +1,5 @@
 const express = require("express");
-const Student = require('../../db').Student
+const Student = require("../../db").Student;
 const router = express.Router();
 
 router
@@ -12,35 +12,28 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const data = await Student.bulkCreate([{
-        name: "Gentrit",
-        lastname: "Begaj"
-      }, {
-        name: "Luca",
-        lastname: "Perulo"
-      }, ])
-      res.send(data)
+      const data = await Student.bulkCreate([
+        { name: "Gentrit", lastname: "Begaj" },
+        { name: "Luca", lastname: "Perullo" },
+      ]);
+      res.send(data);
     } catch (e) {
       console.log(e);
     }
   });
-
-// make a route for the class_student relation (many-to-many)
-// Special methods/mixins
-router.route('/:studentId/classes/:classId').post (async (req, res, next) => {
+router.route("/:studentId/classes/:classId").post(async (req, res, next) => {
   try {
-    const Student = await Student.findByPk(req.params.id)
-    student.addClass(req.params.classId)
+    const student = await Student.findByPk(req.params.studentId);
+    const result = await student.addClass(req.params.classId);
+    res.send(result);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
-
+});
 router
   .route("/:id")
   .get(async (req, res, next) => {
     try {
-
     } catch (e) {
       console.log(e);
     }

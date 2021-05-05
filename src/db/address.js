@@ -1,15 +1,14 @@
-// THIS IS FOR 1ON1 RELATION EXAMPLE
-
-module.exports = (sequelize, Datatypes) => {
-  const Module = sequalize.define('module', {
+module.exports = (sequelize, DataTypes) => {
+  const Address = sequelize.define("address", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     country: {
       type: DataTypes.TEXT,
-      allowNull: false
-    }
-  })
-}
+      allowNull: false,
+    },
+  });
+  return Address;
+};

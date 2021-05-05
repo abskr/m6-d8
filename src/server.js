@@ -9,13 +9,9 @@ app.use(express.json());
 app.use("/api", services);
 const port = process.env.PORT || 5000;
 
-// target /db/index.js
-// '.sync' is for 'Modal Synchronization'
-// ({force: true}) => to drop the table
-db.sequelize.sync({force: true}).then(() => { 
+db.sequelize.sync().then(() => {
   app.listen(port, () => console.log("server is running: " + port));
   app.on("error", (error) =>
     console.info(" ❌ Server is not running due to : ", error)
   );
-
-})
+});
