@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api", services);
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 db.sequelize.sync().then(() => {
   app.listen(port, () => console.log("server is running: " + port));
