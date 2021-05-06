@@ -34,7 +34,7 @@ router
   })
   .put(async (req, res, next) => {
     try {
-      const data = await Tutor.update(req.body, {
+      const data = await Class.update(req.body, {
         where: { id: req.params.id },
         returning: true,
       });
@@ -46,7 +46,7 @@ router
   })
   .delete(async (req, res, next) => {
     try {
-      const data = await Tutor.destroy({ where: { id: req.params.id } });
+      const data = await Class.destroy({ where: { id: req.params.id } });
       console.log(data);
       if (data > 0) {
         res.send("ok");
