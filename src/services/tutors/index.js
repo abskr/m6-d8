@@ -15,7 +15,7 @@ router
           model: Module,
           include: {
             model: Class,
-              attributes: { exclude: ['tutorId']},
+            // where : {"tutorId" : `"tutor"."id"`},
             include: {
               model: Student,
               through: {
